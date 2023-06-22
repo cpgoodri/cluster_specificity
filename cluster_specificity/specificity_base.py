@@ -2,7 +2,8 @@
 
 
 
-def setup_loss_fn(update_energy_fn,
+def setup_loss_fn(params_default,
+                  update_energy_fn,
                   create_test_structures_fn,
                   calculate_affinities_fn,
                   calculate_overlaps_fn,
@@ -13,6 +14,8 @@ def setup_loss_fn(update_energy_fn,
   """ Set up a function to calculate the loss
 
   Args:
+    paramd_default: dictionary of default energy parameters
+
     update_energy_fn: a function to update (or create) an energy function based
       on parameters. 
 
@@ -78,14 +81,16 @@ def setup_loss_fn(update_energy_fn,
 
   """
 
-  def loss_fn(params, key):
+  def loss_fn(theta, key):
     """ Calculate the loss
 
     Args:
-      params: pytree of parameter values. Must be recognizable by 
+      theta: pytree of parameter values. Must be recognizable by 
         update_energy_fn and constraints_fn
       key: a JAX prng key
     """
+    params = {**params_default, **theta} 
+
     energy_fn = update_energy_fn(params)
 
     R_test_init = create_test_structures_fn(key, R_reference_structures)
