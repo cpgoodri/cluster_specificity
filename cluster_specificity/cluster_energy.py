@@ -1,4 +1,3 @@
-
 import jax.numpy as jnp
 from jax import vmap
 from jax_md import space, energy, smap
